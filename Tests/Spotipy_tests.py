@@ -1,8 +1,15 @@
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
+import os
 
-sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id="0e6ced6cd3a24f5c9be763a90a054bf4",
-                                                           client_secret="90b246aaf2554ff489833c95360dc155"))
+try:
+    from dotenv import load_dotenv
+    load_dotenv('../.env')
+except ImportError:
+    print("python-dotenv not installed, using system environment variables")
+
+sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=os.environ.get('SPOTIFY_CLIENT_ID'),
+                                                           client_secret=os.environ.get('SPOTIFY_CLIENT_SECRET')))
 
 results = sp.search(q='weezer', limit=20)
 for idx, track in enumerate(results['tracks']['items']):
